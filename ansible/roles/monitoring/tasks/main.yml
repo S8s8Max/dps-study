@@ -1,0 +1,68 @@
+---
+# monitoring ロール: Prometheus + Grafana + node-exporter を Docker Compose で起動する
+
+- name: モニタリング用ディレクトリを作成する
+  ansible.builtin.file:
+    path: "{{ monitoring_dir }}"
+    state: directory
+    owner: root
+    group: root
+    mode: "0755"
+
+- name: モニタリング設定ファイルのサブディレクトリを作成する
+  ansible.builtin.file:
+    path: "{{ item }}"
+    state: directory
+    owner: root
+    group: root
+    mode: "0755"
+  loop:
+    - "{{ monitoring_dir }}/prometheus"
+    - "{{ monitoring_dir }}/grafana/provisioning/datasources"
+    - "{{ monitoring_dir }}/secrets"
+
+- name: Docker Compose ファイルをコピーする
+  ansible.builtin.copy:
+    src: "{{ playbook_dir }}/../docker/monitoring/compose.yml"
+    dest: "{{ monitoring_dir }}/compose.yml"
+    owner: root
+    group: root
+    mode: "0644"
+  notify: restart monitoring
+
+- name: Prometheus 設定ファイルをコピーする
+  ansible.builtin.copy:
+    src: "{{ playbook_dir }}/../docker/monitoring/prometheus/prometheus.yml"
+    dest: "{{ monitoring_dir }}/prometheus/prometheus.yml"
+    owner: root
+    group: root
+    mode: "0644"
+  notify: restart monitoring
+
+- name: Grafana データソース設定をコピーする
+  ansible.builtin.copy:
+    src: "{{ playbook_dir }}/../docker/monitoring/grafana/provisioning/datasources/prometheus.yml"
+    dest: "{{ monitoring_dir }}/grafana/provisioning/datasources/prometheus.yml"
+    owner: root
+    group: root
+    mode: "0644"
+  notify: restart monitoring
+
+- name: Grafana 管理者パスワードファイルを作成する
+  ansible.builtin.copy:
+    content: "{{ grafana_admin_password }}"
+    dest: "{{ monitoring_dir }}/secrets/grafana_admin_password.txt"
+    owner: root
+    group: root
+    mode: "0600"
+  no_log: true   # パスワードをログに出力しない
+
+- name: モニタリングスタックを起動する
+  ansible.builtin.command:
+    cmd: docker compose up -d --remove-orphans
+    chdir: "{{ monitoring_dir }}"
+  register: compose_result
+  changed_when: >
+    'Started' in compose_result.stdout or
+    'Created' in compose_result.stdout or
+    'Recreated' in compose_result.stdout

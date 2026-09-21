@@ -8,5 +8,4 @@
   roles:
     - common
     - docker
-
-# monitoring ロールは 08 で追加する
+    - monitoring

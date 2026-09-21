@@ -1,0 +1,5 @@
+---
+# monitoring ロールのデフォルト値
+
+monitoring_dir: /opt/monitoring
+grafana_admin_password: "changeme"   # 本番環境では ansible-vault で上書きすること
