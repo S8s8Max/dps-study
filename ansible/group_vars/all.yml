@@ -1,0 +1,25 @@
+---
+# 全ノード共通の変数
+
+# タイムゾーン
+timezone: Asia/Tokyo
+
+# インストールするパッケージ
+common_packages:
+  - vim
+  - htop
+  - curl
+  - wget
+  - git
+  - rsync
+  - net-tools
+  - dnsutils
+
+# chrony の NTP サーバー
+chrony_ntp_servers:
+  - 2.debian.pool.ntp.org
+
+# SSH: パスワード認証を無効にするか
+sshd_password_authentication: "no"
+# SSH: root ログインを禁止するか
+sshd_permit_root_login: "no"

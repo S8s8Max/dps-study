@@ -1,0 +1,6 @@
+---
+# docker ロールのデフォルト値
+
+# Docker に追加するユーザー（sudo 権限なしで docker コマンドを使えるようにする）
+docker_users:
+  - "{{ ansible_user }}"

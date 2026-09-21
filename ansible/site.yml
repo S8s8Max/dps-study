@@ -1,0 +1,11 @@
+---
+# ステージ0 全体の Playbook
+# 実行方法: ansible-playbook site.yml
+
+- name: 全ノード共通設定
+  hosts: all
+  become: true
+  roles:
+    - common
+    - docker
+    - monitoring

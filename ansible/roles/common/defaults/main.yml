@@ -1,0 +1,18 @@
+---
+# common ロールのデフォルト値（group_vars/all.yml で上書き可能）
+
+timezone: Asia/Tokyo
+
+common_packages:
+  - vim
+  - htop
+  - curl
+  - wget
+  - git
+  - rsync
+
+chrony_ntp_servers:
+  - 2.debian.pool.ntp.org
+
+sshd_password_authentication: "no"
+sshd_permit_root_login: "no"
