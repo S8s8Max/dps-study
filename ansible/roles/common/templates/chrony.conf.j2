@@ -1,0 +1,15 @@
+# {{ ansible_managed }}
+# chrony 設定ファイル（Ansible が管理）
+
+{% for server in chrony_ntp_servers %}
+pool {{ server }} iburst maxsources 4
+{% endfor %}
+
+# 起動直後に大きなズレを一気に修正する（RTC なしの Raspberry Pi に重要）
+makestep 1.0 3
+
+# ドリフト率を保存するファイル
+driftfile /var/lib/chrony/chrony.drift
+
+# ログの出力先
+logdir /var/log/chrony

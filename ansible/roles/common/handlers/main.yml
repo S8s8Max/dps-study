@@ -1,0 +1,18 @@
+---
+# common ロールのハンドラー
+# notify された場合にのみ実行される
+
+- name: SSH サービスを再起動する
+  ansible.builtin.systemd:
+    name: ssh
+    state: restarted
+
+- name: chrony を再起動する
+  ansible.builtin.systemd:
+    name: chrony
+    state: restarted
+
+- name: タイムゾーン変更後の再起動
+  ansible.builtin.reboot:
+    msg: "タイムゾーン変更のため再起動します"
+    reboot_timeout: 120
