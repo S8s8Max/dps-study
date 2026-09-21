@@ -1,0 +1,44 @@
+services:
+  redpanda:
+    image: redpandadata/redpanda:v24.3.6
+    container_name: redpanda
+    command:
+      - redpanda
+      - start
+      - --smp 1
+      - --memory 512M
+      - --reserve-memory 0M
+      - --overprovisioned
+      - --node-id 0
+      - --check=false
+      - --kafka-addr internal://0.0.0.0:9092,external://0.0.0.0:19092
+      - --advertise-kafka-addr internal://redpanda:9092,external://localhost:19092
+      - --schema-registry-addr internal://0.0.0.0:8081,external://0.0.0.0:18081
+      - --rpc-addr redpanda:33145
+      - --advertise-rpc-addr redpanda:33145
+    ports:
+      - "19092:19092"   # Kafka API（Python クライアントはこちら）
+      - "18081:18081"   # Schema Registry
+      - "9644:9644"     # Admin HTTP API
+    volumes:
+      - redpanda_data:/var/lib/redpanda/data
+    deploy:
+      resources:
+        limits:
+          memory: 600m
+
+  # Redpanda Console は Pi 4（2GB+）推奨。Pi 3B では省略可。
+  # console:
+  #   image: docker.redpanda.com/redpandadata/console:v2.7.0
+  #   depends_on: [redpanda]
+  #   ports:
+  #     - "8080:8080"
+  #   environment:
+  #     KAFKA_BROKERS: redpanda:9092
+  #   deploy:
+  #     resources:
+  #       limits:
+  #         memory: 128m
+
+volumes:
+  redpanda_data:
