@@ -1,0 +1,51 @@
+---
+# docker ロール: Docker CE のインストールと設定
+
+- name: /etc/apt/keyrings ディレクトリを作成する
+  ansible.builtin.file:
+    path: /etc/apt/keyrings
+    state: directory
+    mode: "0755"
+
+- name: Docker の GPG 公開鍵を追加する
+  ansible.builtin.get_url:
+    url: https://download.docker.com/linux/debian/gpg
+    dest: /etc/apt/keyrings/docker.asc
+    mode: "0644"
+    force: false   # すでに存在する場合は再ダウンロードしない
+
+- name: Docker の apt リポジトリを追加する
+  ansible.builtin.apt_repository:
+    repo: >-
+      deb [arch=arm64 signed-by=/etc/apt/keyrings/docker.asc]
+      https://download.docker.com/linux/debian
+      {{ ansible_distribution_release }} stable
+    state: present
+    filename: docker
+
+- name: Docker パッケージをインストールする
+  ansible.builtin.apt:
+    name:
+      - docker-ce
+      - docker-ce-cli
+      - containerd.io
+      - docker-buildx-plugin
+      - docker-compose-plugin
+    state: present
+    update_cache: true
+
+- name: Docker サービスを起動・自動起動を有効にする
+  ansible.builtin.systemd:
+    name: docker
+    state: started
+    enabled: true
+
+- name: 指定ユーザーを docker グループに追加する
+  ansible.builtin.user:
+    name: "{{ item }}"
+    groups: docker
+    append: true
+  loop: "{{ docker_users }}"
+
+- name: グループ変更を反映するために SSH 接続をリセットする
+  ansible.builtin.meta: reset_connection

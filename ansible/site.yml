@@ -7,5 +7,6 @@
   become: true
   roles:
     - common
+    - docker
 
-# docker と monitoring ロールは 07, 08 で追加する
+# monitoring ロールは 08 で追加する
