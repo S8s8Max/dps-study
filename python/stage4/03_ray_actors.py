@@ -4,6 +4,7 @@
 """
 import random
 import time
+import zlib
 import ray
 
 
@@ -39,13 +40,23 @@ class StateShard:
 
 # ── シャーディングマネージャー ──
 
+def shard_of(key: str, n_shards: int) -> int:
+    """キーからシャード番号を決める。
+
+    組み込みの hash() は使わない。文字列の hash() はプロセスごとに
+    ランダム化される（PYTHONHASHSEED）ため、プロセスや再起動をまたぐと
+    同じキーが別のシャードに割り当てられてしまう。
+    """
+    return zlib.crc32(key.encode()) % n_shards
+
+
 class ShardedState:
     def __init__(self, n_shards: int = 4):
         self.n_shards = n_shards
         self.shards = [StateShard.remote(i) for i in range(n_shards)]
 
     def add(self, key: str, value: float):
-        shard = self.shards[hash(key) % self.n_shards]
+        shard = self.shards[shard_of(key, self.n_shards)]
         shard.add.remote(key, value)
 
     def get_all_summaries(self) -> dict:
@@ -114,7 +125,7 @@ def main():
     total_count = 0
     for key in sorted(summaries):
         s = summaries[key]
-        shard_id = hash(key) % N_SHARDS
+        shard_id = shard_of(key, N_SHARDS)
         total_count += s["count"]
         print(
             f"  シャード {shard_id}: {key:<12} → "

@@ -35,9 +35,9 @@ B = comm.bcast(B, root=0)
 my_rows = comm.scatter(A_chunks, root=0)
 
 # 並列処理開始
-t_start = comm.Wtime()
+t_start = MPI.Wtime()
 my_result = my_rows @ B
-t_end = comm.Wtime()
+t_end = MPI.Wtime()
 
 # 結果を rank=0 に集約
 all_results = comm.gather(my_result, root=0)
@@ -45,6 +45,15 @@ all_results = comm.gather(my_result, root=0)
 if rank == 0:
     result = np.vstack(all_results)
     mpi_time = t_end - t_start
-    print(f"MPI 並列:    {mpi_time:.2f} 秒  ← {seq_time/mpi_time:.1f}x 速い")
+    ratio = seq_time / mpi_time
+    verdict = f"{ratio:.1f}x 速い" if ratio >= 1 else f"{1/ratio:.1f}x 遅い"
+    print(f"MPI 並列:    {mpi_time:.2f} 秒  ← {verdict}")
     ok = np.allclose(result, expected)
     print(f"結果の正確性: {'OK' if ok else 'NG'}")
+
+    if ratio < 1:
+        print()
+        print("※ 逐次のほうが速い場合があります。numpy の行列積は内部で")
+        print("  BLAS がすでにマルチスレッド実行しているため、この規模では")
+        print("  MPI の分割・通信コストのほうが大きくなります。")
+        print("  行列サイズを大きくすると MPI が有利になります。")

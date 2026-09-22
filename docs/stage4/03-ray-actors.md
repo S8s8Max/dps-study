@@ -90,6 +90,8 @@ ray.kill(counter)
 キーをハッシュで N 個の Actor に振り分ける（シャーディング）。
 
 ```python
+import zlib
+
 NUM_SHARDS = 4
 
 @ray.remote
@@ -110,12 +112,51 @@ class Shard:
 shards = [Shard.remote() for _ in range(NUM_SHARDS)]
 
 def get_shard(key: str) -> Shard:
-    return shards[hash(key) % NUM_SHARDS]
+    return shards[zlib.crc32(key.encode()) % NUM_SHARDS]
 
 # 各イベントを対応するシャードへ
 get_shard("pi-cpu").add.remote("pi-cpu", 42.5)
 get_shard("pi-memory").add.remote("pi-memory", 61.0)
 ```
+
+### 組み込みの `hash()` を使ってはいけない（重要）
+
+シャード決定に Python の `hash()` を使いたくなりますが、**これは壊れます**。
+
+```python
+# ✗ やってはいけない
+return shards[hash(key) % NUM_SHARDS]
+```
+
+文字列の `hash()` は**プロセスごとにランダム化**されているためです
+（`PYTHONHASHSEED`。ハッシュ衝突攻撃への対策として Python 3.3 以降の既定動作）。
+
+```console
+$ python3 -c "print(hash('pi-cpu') % 4)"
+1
+$ python3 -c "print(hash('pi-cpu') % 4)"
+3     ← 同じキーなのに違う値
+```
+
+単一プロセス内では一貫しているので**テストでは問題が表面化しません**。
+しかし実際に分散させると次が起きます。
+
+- ワーカー A と ワーカー B が、同じキーを**別のシャードに振り分ける**
+- プロセスを再起動すると、**全キーの配置が変わる**（過去の状態を見失う）
+
+**対処**：プロセスをまたいで安定するハッシュを使います。
+
+```python
+import zlib
+zlib.crc32(key.encode()) % NUM_SHARDS      # 高速・安定
+
+import hashlib
+int(hashlib.md5(key.encode()).hexdigest(), 16) % NUM_SHARDS   # より均一
+```
+
+> 📌 Kafka / Redpanda が**クライアント側で murmur2 などの決まったハッシュ**を
+> 使うのも同じ理由です。どのプロデューサーから送っても同じキーが
+> 同じパーティションに行くことを保証する必要があります。
 
 ---
 
@@ -163,6 +204,6 @@ python3 python/stage4/03_ray_actors.py
 | Actor | ステートフルな分散オブジェクト |
 | `.remote()` | 非同期メソッド呼び出し（ObjectRef を返す） |
 | 名前付き Actor | `Actor.options(name=...)` でグローバル参照 |
-| シャーディング | `hash(key) % N` でキーを Actor に振り分け |
+| シャーディング | `zlib.crc32(key) % N` でキーを Actor に振り分け（`hash()` は不可） |
 
 次は **Dask** で NumPy/pandas を自動で並列化する。

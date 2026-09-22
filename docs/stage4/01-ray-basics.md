@@ -121,12 +121,40 @@ data = list(range(1_000_000))
 data_ref = ray.put(data)
 
 @ray.remote
-def process(data_ref):
-    data = ray.get(data_ref)  # ローカルコピーなしで参照
+def process(data):          # 受け取るのは ObjectRef ではなく実体
     return sum(data)
 
 result = ray.get(process.remote(data_ref))
 ```
+
+#### 引数に渡した ObjectRef は自動で実体化される（つまずきやすい点）
+
+`f.remote(data_ref)` のように **ObjectRef を引数に直接渡すと、
+Ray がタスク実行前に自動で中身を取り出して**関数に渡します。
+そのためタスクの中で `ray.get()` を呼ぶ必要はありません。
+
+```python
+# ✗ よくある間違い：タスク内で ray.get() を呼ぶ
+@ray.remote
+def process(data_ref):
+    data = ray.get(data_ref)    # data_ref は既に実体なのでエラー
+    return sum(data)
+```
+
+このとき出るエラーが分かりにくいので注意してください。
+
+```
+TypeError: Attempting to call `get` on the value 0, which is not an ray.ObjectRef.
+```
+
+`ray.get()` は**リストを渡すと「ObjectRef のリスト」として扱う**ため、
+実体化済みのリスト `[0, 1, 2, ...]` を渡すと
+先頭要素の `0` を ObjectRef と誤認してこのメッセージになります。
+「ObjectRef を渡したつもりなのに 0 と言われる」ときは、この自動実体化を疑ってください。
+
+なお、この自動実体化があっても**転送効率は落ちません**。
+オブジェクトストア上の実体を各ワーカーが参照するだけで、
+タスクごとにシリアライズし直すことはありません。
 
 ---
 

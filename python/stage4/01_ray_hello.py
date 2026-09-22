@@ -63,9 +63,10 @@ def main():
     big_list = list(range(100_000))
     ref = ray.put(big_list)
 
+    # 引数に渡した ObjectRef は Ray が自動で実体化する。
+    # タスク内で ray.get() を呼ぶ必要はない（呼ぶとエラーになる）。
     @ray.remote
-    def sum_slice(data_ref, start: int, end: int) -> int:
-        data = ray.get(data_ref)
+    def sum_slice(data: list, start: int, end: int) -> int:
         return sum(data[start:end])
 
     chunk = len(big_list) // 4
