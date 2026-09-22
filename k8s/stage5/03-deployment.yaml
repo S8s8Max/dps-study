@@ -1,0 +1,38 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: hello-deploy
+  namespace: dps-study
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: hello-deploy
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 1
+      maxSurge: 1
+  template:
+    metadata:
+      labels:
+        app: hello-deploy
+    spec:
+      containers:
+        - name: hello
+          image: busybox:1.36
+          command:
+            - sh
+            - -c
+            - |
+              while true; do
+                echo "[$(date +'%H:%M:%S')] Hello from $(hostname)"
+                sleep 5
+              done
+          resources:
+            requests:
+              memory: "16Mi"
+              cpu: "50m"
+            limits:
+              memory: "32Mi"
+              cpu: "100m"
