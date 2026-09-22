@@ -60,6 +60,22 @@ graph TD
 4. `04-fault-models.md` で障害の分類を把握する
 5. `05-theory-to-practice.md` でステージ0–5 の実装に理論を当てはめる
 
+## Stage 6 完了チェックリスト
+
+- [ ] 物理クロックが分散システムで信頼できない理由を説明できる
+- [ ] happens-before 関係（`→`）を定義できる
+- [ ] Lamport クロックの更新ルールを説明できる
+- [ ] `01_lamport_clock.py` を実行し、受信時に時計が進むのを確認した
+- [ ] Lamport クロックでは「同時」を判定できない理由を説明できる
+- [ ] ベクタークロックで happens-before と concurrent を判定できた
+- [ ] CAP 定理の 3 要素を説明し、なぜ CP か AP を選ぶことになるか説明できる
+- [ ] `04_cap_demo.py` で CP（書き込み拒否）と AP（結果整合性）の違いを確認した
+- [ ] Raft の 3 つの役割（Leader / Follower / Candidate）を説明できる
+- [ ] クォーラム（過半数）が必要な理由と、N=2f+1 の関係を説明できる
+- [ ] `03_raft_sim.py` でリーダー選出と障害後の再選出を確認した
+- [ ] クラッシュ障害とビザンチン障害の違いを説明できる
+- [ ] Stage 0–5 の各実装がどの理論に対応するか説明できる
+
 ## 参考文献
 
 - [Designing Data-Intensive Applications (Kleppmann)](https://dataintensive.net/)

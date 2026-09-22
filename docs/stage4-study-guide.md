@@ -61,3 +61,20 @@ pip install ray dask pyarrow
 
 Ray は起動時にオブジェクトストア（共有メモリ）を確保する。
 Pi 3B では `object_store_memory=128*1024*1024`（128MB）を明示する。
+
+## Stage 4 完了チェックリスト
+
+- [ ] `ray.init()` が Pi 上で起動した（`object_store_memory` を指定）
+- [ ] `@ray.remote` タスクを並列実行し、`ray.get` で結果を回収できた
+- [ ] `ray.wait` でバックプレッシャーをかけられた
+- [ ] Ray Actor で状態を保持し、複数タスクから更新できた
+- [ ] Actor をシャーディングして負荷を分散できた
+- [ ] `dask.delayed` で DAG を構築し `compute()` で実行できた
+- [ ] Dask のスケジューラ（synchronous / threads / processes）を切り替えて違いを確認した
+- [ ] Dask DataFrame で pandas より大きいデータを分割処理できた
+- [ ] `06_pipeline.py` でリアルタイム集計とバッチ集計を両立できた
+
+## 次のステージ
+
+Stage 4 が完了したら Stage 5（オーケストレーションと耐障害性：k3s）に進みます。
+ここまではプロセスを手動で起動していましたが、Stage 5 ではコンテナを自動で配置・再起動させます。

@@ -7,7 +7,6 @@
   python3 02_vector_clock.py
 """
 from dataclasses import dataclass, field
-from typing import Optional
 
 
 @dataclass

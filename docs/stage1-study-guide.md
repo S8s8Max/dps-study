@@ -106,15 +106,17 @@ mpirun -np 4 python3 hello_mpi.py
 
 `python/stage1/` に以下のコードを配置します：
 
-| ファイル | 内容 |
-|---|---|
-| `01_gil_demo.py` | GIL の影響を確認するデモ |
-| `02_pool_map.py` | `Pool.map` で並列素数探索 |
-| `03_queue_pipeline.py` | `Queue` を使ったプロデューサー・コンシューマー |
-| `04_mpi_hello.py` | MPI Hello World（rank 表示）|
-| `04_mpi_scatter_gather.py` | Scatter/Gather で配列処理 |
-| `05_benchmark.py` | 逐次 vs 並列のベンチマーク比較 |
-| `05_monte_carlo.py` | モンテカルロ法による円周率推定（逐次・並列） |
+| ファイル | 内容 | 実行方法 |
+|---|---|---|
+| `01_gil_demo.py` | GIL の影響を確認するデモ | `python3 01_gil_demo.py` |
+| `02_pool_map.py` | `Pool.map` で並列素数探索 | `python3 02_pool_map.py` |
+| `03_queue_pipeline.py` | `Queue` を使ったプロデューサー・コンシューマー | `python3 03_queue_pipeline.py` |
+| `04_mpi_hello.py` | MPI Hello World（rank 表示）| `mpirun -np 4 python3 04_mpi_hello.py` |
+| `04_mpi_scatter_gather.py` | Scatter/Gather で配列処理 | `mpirun -np 4 python3 04_mpi_scatter_gather.py` |
+| `05_monte_carlo.py` | モンテカルロ法による円周率推定（逐次・並列） | `python3 05_monte_carlo.py` |
+| `05_mpi_matmul.py` | Scatter/Gather による行列乗算の並列化 | `mpirun -np 4 python3 05_mpi_matmul.py` |
+| `05_mpi_pipeline.py` | Send/Recv による3段パイプライン（フィルター→変換→集計） | `mpirun -np 3 python3 05_mpi_pipeline.py` |
+| `06_benchmark.py` | 逐次 vs 並列のベンチマーク比較（アムダールの法則） | `python3 06_benchmark.py` |
 
 ---
 

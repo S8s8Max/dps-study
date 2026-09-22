@@ -11,7 +11,7 @@
 """
 import asyncio
 import random
-from dataclasses import dataclass, field
+from dataclasses import dataclass
 from enum import Enum, auto
 
 
@@ -19,6 +19,12 @@ class Role(Enum):
     FOLLOWER = auto()
     CANDIDATE = auto()
     LEADER = auto()
+
+
+# リーダーが heartbeat を送る間隔。
+# election timeout (150-300ms) より十分短くないと、
+# リーダーが健在でも Follower がタイムアウトして選出が繰り返される。
+HEARTBEAT_INTERVAL = 0.05
 
 
 @dataclass
@@ -130,11 +136,15 @@ class RaftNode:
                 await self.broadcast(Heartbeat(leader_id=self.node_id, term=self.current_term))
 
     async def handle_heartbeat(self, hb: Heartbeat):
-        if hb.term >= self.current_term:
+        # 古い Term のリーダーからの heartbeat は無視する
+        if hb.term < self.current_term:
+            return
+        if hb.term > self.current_term:
             self.current_term = hb.term
-            self.role = Role.FOLLOWER
-            self.leader_id = hb.leader_id
-            self._reset_timeout()
+            self.voted_for = None
+        self.role = Role.FOLLOWER
+        self.leader_id = hb.leader_id
+        self._reset_timeout()
 
     async def run(self, duration: float):
         loop = asyncio.get_event_loop()
@@ -142,12 +152,20 @@ class RaftNode:
 
         while loop.time() < end_time and self.alive:
             now = loop.time()
-            timeout_left = max(0.001, self.timeout_at - now)
+            if self.role == Role.LEADER:
+                wait = HEARTBEAT_INTERVAL
+            else:
+                wait = max(0.001, self.timeout_at - now)
+            wait = min(wait, end_time - now)
 
             try:
-                msg = await asyncio.wait_for(self.inbox.get(), timeout=timeout_left)
+                msg = await asyncio.wait_for(self.inbox.get(), timeout=wait)
             except asyncio.TimeoutError:
-                if self.role != Role.LEADER:
+                if self.role == Role.LEADER:
+                    # 定期 heartbeat で Follower のタイムアウトを抑止する
+                    await self.broadcast(
+                        Heartbeat(leader_id=self.node_id, term=self.current_term))
+                else:
                     await self.start_election()
                     self._reset_timeout()
                 continue

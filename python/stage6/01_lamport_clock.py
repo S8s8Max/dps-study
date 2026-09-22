@@ -5,9 +5,7 @@
 使い方:
   python3 01_lamport_clock.py
 """
-from dataclasses import dataclass, field
-from typing import Optional
-import random
+from dataclasses import dataclass
 
 
 @dataclass

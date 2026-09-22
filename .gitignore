@@ -1,0 +1,26 @@
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+.pytest_cache/
+
+# Stage 3–4 のスクリプトが出力する一時データ
+*.csv
+!docs/**/*.csv
+
+# 秘密情報（ansible-vault で管理しないものは絶対にコミットしない）
+*.secret
+*.key
+*.pem
+vault-password.txt
+k8s/**/*secret*.yaml
+!k8s/stage5/05-configmap-secret.yaml
+
+# kubeconfig（クラスターへの完全なアクセス権を含む）
+kubeconfig
+*.kubeconfig
+.kube/
+
+# OS
+.DS_Store
