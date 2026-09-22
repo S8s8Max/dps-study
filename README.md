@@ -72,32 +72,47 @@ ansible-playbook ansible/site.yml
 
 ```
 .
-├── README.md                      # このファイル
+├── README.md
 ├── docs/
-│   ├── hardware.md                # 機種・台数・IP・役割の表
-│   ├── stage0-study-guide.md      # ステージ0の全体計画（設計図）
-│   └── stage0/
-│       ├── 01-hardware-os.md
-│       ├── 02-linux-basics.md
-│       ├── 03-network.md
-│       ├── 04-ssh.md
-│       ├── 05-time-sync.md
-│       ├── 06-ansible.md
-│       ├── 07-docker.md
-│       ├── 08-monitoring.md
-│       └── 09-rebuild-test.md
+│   ├── hardware.md                     # 機種・台数・IP・役割の表
+│   ├── stage0-study-guide.md
+│   ├── stage1-study-guide.md
+│   ├── stage2-study-guide.md
+│   ├── stage3-study-guide.md
+│   ├── stage4-study-guide.md
+│   ├── stage5-study-guide.md
+│   ├── stage6-study-guide.md
+│   ├── stage0/                         # 01〜09 各ステップのドキュメント
+│   ├── stage1/                         # 01〜05
+│   ├── stage2/                         # 01〜05
+│   ├── stage3/                         # 01〜05
+│   ├── stage4/                         # 01〜05
+│   ├── stage5/                         # 01〜05
+│   └── stage6/                         # 01〜05
+├── python/
+│   ├── stage1/                         # GIL・Pool・Queue・mpi4py・ベンチマーク
+│   ├── stage2/                         # ZeroMQ・MQTT・NATS・パイプライン
+│   ├── stage3/                         # ステートフルカウンタ・時間窓・Redpanda
+│   ├── stage4/                         # Ray・Dask・パイプライン
+│   ├── stage5/                         # ヘルスサーバー・Pod 監視・ローリングアップデート
+│   └── stage6/                         # Lamport クロック・ベクタークロック・Raft・CAP
 ├── ansible/
 │   ├── ansible.cfg
 │   ├── inventory/hosts.yml
 │   ├── group_vars/
 │   ├── site.yml
 │   └── roles/
-│       ├── common/                # パッケージ・タイムゾーン・chrony・SSH設定
+│       ├── common/                     # パッケージ・タイムゾーン・chrony・SSH設定
 │       ├── docker/
-│       └── monitoring/            # node_exporter・Prometheus・Grafana
+│       └── monitoring/                 # node_exporter・Prometheus・Grafana
 ├── docker/
-│   └── monitoring/compose.yml
-└── logs/                          # 学習ログ（自由に記録してください）
+│   ├── monitoring/compose.yml          # Prometheus・Grafana
+│   ├── messaging/compose.yml           # Mosquitto (MQTT)
+│   ├── redpanda/compose.yml            # Redpanda (Kafka 互換)
+│   └── stage5/Dockerfile               # ヘルスサーバー（arm64）
+├── k8s/
+│   └── stage5/                         # Namespace・Pod・Deployment・Service・ConfigMap・Secret・Probe・NATS・パイプライン
+└── logs/                               # 学習ログ（自由に記録してください）
 ```
 
 ## 学習ログの残し方
@@ -111,6 +126,25 @@ echo "## 2026-09-21\n- 01-hardware-os を完了\n- SSH の鍵認証でつまず�
 
 ## 参考資料
 
+### 環境・インフラ（Stage 0）
 - [Raspberry Pi 公式ドキュメント](https://www.raspberrypi.com/documentation/)
 - [Ansible 公式ドキュメント](https://docs.ansible.com/)
 - [Docker 公式ドキュメント](https://docs.docker.com/)
+
+### メッセージング・ストリーム処理（Stage 2–3）
+- [ZeroMQ ガイド](https://zguide.zeromq.org/)
+- [NATS 公式ドキュメント](https://docs.nats.io/)
+- [Redpanda 公式ドキュメント](https://docs.redpanda.com/)
+
+### 分散フレームワーク（Stage 4）
+- [Ray 公式ドキュメント](https://docs.ray.io/)
+- [Dask 公式ドキュメント](https://docs.dask.org/)
+
+### オーケストレーション（Stage 5）
+- [k3s 公式ドキュメント](https://docs.k3s.io/)
+- [Kubernetes 公式ドキュメント](https://kubernetes.io/docs/)
+
+### 分散システム理論（Stage 6）
+- [Designing Data-Intensive Applications (Kleppmann)](https://dataintensive.net/)
+- [Raft 論文](https://raft.github.io/raft.pdf)
+- [Lamport 1978: Time, Clocks, and the Ordering of Events](https://lamport.azurewebsites.net/pubs/time-clocks.pdf)
