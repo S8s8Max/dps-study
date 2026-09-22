@@ -98,6 +98,52 @@ Pi のラズパイクラスターでは **NodePort** が最も使いやすい。
 curl http://192.168.1.100:30080
 ```
 
+### NodePort の先：Ingress と Gateway API
+
+NodePort は「ポート番号でアクセスする」方式なので、公開するサービスが増えると
+30080、30081、30082... とポートが散らばって管理しきれなくなります。
+実運用では **L7（HTTP）レベルで振り分ける**のが普通です。
+
+```
+NodePort:        http://pi:30080  http://pi:30081   ← ポートで区別
+Ingress/Gateway: http://pi/api    http://pi/grafana ← パスやホスト名で区別
+```
+
+k8s には現在 2 つの方式があります。
+
+| 方式 | 位置づけ |
+|------|---------|
+| **Ingress** | 長く標準だったが、機能拡張をベンダー独自アノテーションに頼る問題があった |
+| **Gateway API** | その反省から作られた後継。役割分担とルーティング表現が整理され、現在の推奨 |
+
+k3s は **Traefik** を Ingress コントローラーとして標準で同梱しています
+（`kubectl get pods -n kube-system` に `traefik-*` が見えるはず）。
+そのため追加インストールなしで Ingress を試せます。
+
+```yaml
+# 参考: パスでの振り分け（この教材では必須ではない）
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: dps-ingress
+  namespace: dps-study
+spec:
+  rules:
+    - http:
+        paths:
+          - path: /health
+            pathType: Prefix
+            backend:
+              service:
+                name: health-service
+                port:
+                  number: 8080
+```
+
+> 📌 この教材では構成をシンプルに保つため NodePort で進めます。
+> ただし**実務では Gateway API（または Ingress）が標準**である点は
+> 押さえておいてください。
+
 ---
 
 ## 5. リソースの確認コマンド

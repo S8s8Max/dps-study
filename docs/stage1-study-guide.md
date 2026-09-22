@@ -12,7 +12,7 @@
 | 項目 | 内容 |
 |---|---|
 | ハードウェア | Raspberry Pi 3 Model B（4 コア、1GB RAM）|
-| OS | Raspberry Pi OS Lite 64-bit（Bookworm）|
+| OS | Raspberry Pi OS Lite 64-bit（Bookworm / Trixie）|
 | Stage 0 完了 | SSH・Docker・Ansible・モニタリングが動いていること |
 
 ---

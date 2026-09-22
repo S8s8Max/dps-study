@@ -142,13 +142,29 @@ Wi-Fi の不安定
 
 ### 推奨対策
 
-```yaml
-# k3s の election timeout を長めに設定（有線 LAN 前提なら不要）
-# /etc/systemd/system/k3s.service に追記
+etcd のタイムアウトは k3s の独自フラグではなく、`--etcd-arg` で
+**etcd 本体のフラグをそのまま渡します**。
+
+```ini
+# /etc/systemd/system/k3s.service を編集
+# election-timeout はデフォルト 1000ms、heartbeat-interval は 100ms
+# election-timeout は heartbeat-interval の 10 倍程度にするのが推奨
 ExecStart=/usr/local/bin/k3s server \
-  --etcd-election-timeout 5000 \   # デフォルト 1000ms
-  --etcd-heartbeat-interval 500     # デフォルト 100ms
+    --etcd-arg="heartbeat-interval=500" \
+    --etcd-arg="election-timeout=5000"
 ```
+
+```bash
+# 編集後は再読み込みが必要
+sudo systemctl daemon-reload
+sudo systemctl restart k3s
+```
+
+> ⚠️ **戻し方**：追記した 2 行を削除して `daemon-reload` → `restart k3s` で元に戻ります。
+> 変更前に `sudo cp /etc/systemd/system/k3s.service{,.bak}` でバックアップを取ってください。
+>
+> 有線 LAN で組んでいるなら、この調整は基本的に不要です。
+> Wi-Fi 接続でリーダー選出が頻発する場合にだけ検討してください。
 
 ## まとめ
 

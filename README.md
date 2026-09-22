@@ -21,7 +21,7 @@ Raspberry Pi を使って分散処理を段階的に学ぶための、教材と�
 | 項目 | 内容 |
 |------|------|
 | ハードウェア | Raspberry Pi 3 Model B（詳細は `docs/hardware.md` 参照）|
-| OS | Raspberry Pi OS Lite 64-bit（Bookworm 以降）|
+| OS | Raspberry Pi OS Lite 64-bit（Bookworm / Trixie）|
 | アーキテクチャ | arm64（aarch64）|
 | 管理用PC | macOS |
 | ネットワーク管理 | NetworkManager（`nmcli`）|
@@ -156,10 +156,13 @@ echo "## 2026-09-21\n- 01-hardware-os を完了\n- SSH の鍵認証でつまず�
 ### 分散フレームワーク（Stage 4）
 - [Ray 公式ドキュメント](https://docs.ray.io/)
 - [Dask 公式ドキュメント](https://docs.dask.org/)
+- [Polars 公式ドキュメント](https://docs.pola.rs/) — 単一ノードで済む場合の第一候補
+- [DuckDB 公式ドキュメント](https://duckdb.org/docs/) — SQL で Parquet/CSV を直接処理
 
 ### オーケストレーション（Stage 5）
 - [k3s 公式ドキュメント](https://docs.k3s.io/)
 - [Kubernetes 公式ドキュメント](https://kubernetes.io/docs/)
+- [Gateway API](https://gateway-api.sigs.k8s.io/) — Ingress の後継
 
 ### 分散システム理論（Stage 6）
 - [Designing Data-Intensive Applications (Kleppmann)](https://dataintensive.net/)

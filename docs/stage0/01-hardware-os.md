@@ -245,8 +245,23 @@ cat /etc/os-release | grep -E "^(NAME|VERSION)"
 期待される出力（例）：
 ```
 NAME="Debian GNU/Linux"
-VERSION="12 (bookworm)"
+VERSION="13 (trixie)"      # 現行世代
+VERSION="12 (bookworm)"    # 1 つ前の世代。この教材はどちらでも進められる
 ```
+
+> 📌 **Bookworm と Trixie のどちらでもよい**
+>
+> Raspberry Pi OS のベースは Debian 12（Bookworm）→ Debian 13（Trixie）と更新されています。
+> この教材の手順は**どちらでも通ります**。主な違いは次の 2 点です。
+>
+> | 項目 | Bookworm (12) | Trixie (13) |
+> |------|--------------|-------------|
+> | Python | 3.11 | 3.13 |
+> | ネットワーク管理 | NetworkManager | NetworkManager（同じ） |
+>
+> どちらも PEP 668 が有効なので、`pip install` には仮想環境が必要です
+> （[`docs/python-setup.md`](../python-setup.md) 参照）。
+> 新規に構築するなら Trixie を選んでください。
 
 ```bash
 # 4. ホスト名が正しく設定されていることを確認（pi-master 上で実行）

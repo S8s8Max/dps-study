@@ -168,7 +168,7 @@ ansible all -m ping
 ```
 
 期待される出力：
-```yaml
+```console
 pi-master | SUCCESS => {
     "changed": false,
     "ping": "pong"
