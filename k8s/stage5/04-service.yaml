@@ -1,0 +1,32 @@
+---
+# ClusterIP: クラスター内部のみアクセス可能
+apiVersion: v1
+kind: Service
+metadata:
+  name: hello-service
+  namespace: dps-study
+spec:
+  selector:
+    app: hello-deploy
+  ports:
+    - name: http
+      port: 80
+      targetPort: 8080
+  type: ClusterIP
+
+---
+# NodePort: Pi の IP:30080 で外部からアクセス可能（学習・テスト用）
+apiVersion: v1
+kind: Service
+metadata:
+  name: hello-nodeport
+  namespace: dps-study
+spec:
+  selector:
+    app: hello-deploy
+  ports:
+    - name: http
+      port: 80
+      targetPort: 8080
+      nodePort: 30080   # 30000〜32767 の範囲
+  type: NodePort

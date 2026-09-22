@@ -1,0 +1,21 @@
+# 学習用: Pod を直接定義する（本番では Deployment を使う）
+apiVersion: v1
+kind: Pod
+metadata:
+  name: hello-pod
+  namespace: dps-study
+  labels:
+    app: hello
+spec:
+  containers:
+    - name: hello
+      image: busybox:1.36
+      command: ["sh", "-c", "echo Hello from $(hostname) && sleep 3600"]
+      resources:
+        requests:
+          memory: "16Mi"
+          cpu: "50m"
+        limits:
+          memory: "32Mi"
+          cpu: "100m"
+  restartPolicy: Always
