@@ -58,13 +58,13 @@ sensor.>                   ← > は複数トークン（sensor. 以下すべて
 # Stage 2 の Docker Compose で起動済みのはず
 docker ps | grep nats
 # CONTAINER ID   IMAGE               STATUS
-# xxx            nats:2.10.20-alpine Up X seconds
+# xxx            nats:2.15.0-alpine Up X seconds
 
 # HTTP モニタリングで状態確認
 curl http://localhost:8222/varz | python3 -m json.tool | head -20
 # {
 #   "server_id": "...",
-#   "version": "2.10.20",
+#   "version": "2.15.0",
 #   ...
 # }
 ```
@@ -74,7 +74,8 @@ curl http://localhost:8222/varz | python3 -m json.tool | head -20
 ## 3. nats-py のインストール
 
 ```bash
-pip install nats-py
+source .venv/bin/activate
+pip install -r requirements/stage2.txt
 
 python3 -c "import nats; print('OK')"
 # OK

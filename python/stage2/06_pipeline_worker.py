@@ -25,7 +25,7 @@ async def main(worker_id: int):
     print(f"[worker{worker_id}] 起動: タスク待機中")
 
     # ZeroMQ をノンブロッキングで使うため asyncio と組み合わせる
-    loop = asyncio.get_event_loop()
+    loop = asyncio.get_running_loop()
     try:
         while True:
             # タスクが来るまで非同期に待つ

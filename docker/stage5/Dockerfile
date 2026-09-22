@@ -1,10 +1,11 @@
 # ヘルスチェックサーバー（python/stage5/01_health_server.py）の Docker イメージ
 # arm64 ネイティブ対応（Raspberry Pi 用）
-FROM python:3.11-slim
+FROM python:3.13-slim
 
 WORKDIR /app
 
-RUN pip install --no-cache-dir aiohttp==3.9.5
+COPY requirements/stage5.txt ./requirements.txt
+RUN pip install --no-cache-dir -r requirements.txt
 
 COPY python/stage5/01_health_server.py ./health_server.py
 

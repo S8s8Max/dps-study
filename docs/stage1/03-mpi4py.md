@@ -59,10 +59,16 @@ mpirun -np 4 python3 script.py
 
 ### mpi4py のインストール
 
+> 📦 初回は [`docs/python-setup.md`](../python-setup.md) の venv 作成を先に済ませてください。
+> Bookworm 以降は仮想環境なしに `pip install` するとエラーになります。
+
 ```bash
-# OpenMPI と mpi4py をインストール
-sudo apt-get install -y libopenmpi-dev openmpi-bin
-pip install mpi4py
+# OpenMPI（mpi4py のビルドに必要）はシステム側に入れる
+sudo apt install -y libopenmpi-dev openmpi-bin
+
+# mpi4py は venv の中へ
+source .venv/bin/activate
+pip install -r requirements/stage1.txt
 
 # インストール確認
 mpirun --version

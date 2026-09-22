@@ -40,15 +40,21 @@ graph LR
 
 ## インストール
 
-```bash
-pip install ray[default] dask[complete] pyarrow
-```
-
-Pi 3B 向け最小インストール（容量節約）：
+前提：[`docs/python-setup.md`](./python-setup.md) の venv を作成済みであること。
 
 ```bash
-pip install ray dask pyarrow
+source .venv/bin/activate
+pip install -r requirements/stage4.txt
 ```
+
+Ray Dashboard も使いたい場合は追加で：
+
+```bash
+pip install "ray[default]"
+```
+
+> 💾 Pi 3B（1GB RAM・microSD）では `ray[default]` は重いです。
+> 教材のコードは最小構成の `ray` で動きます（Dashboard だけ使えません）。
 
 ## ハードウェア注意
 

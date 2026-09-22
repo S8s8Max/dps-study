@@ -92,7 +92,7 @@ def main():
     # ── ステップ 4: ローリングアップデート ──
     step("4. ローリングアップデート（image タグを変更して apply）")
     print("  注意: マニフェストの image を変更してから apply してください")
-    print("  例:   busybox:1.36 → busybox:1.35")
+    print("  例:   busybox:1.37 → busybox:1.36")
     print()
     print("  現在の Revision 履歴:")
     history = kubectl("rollout", "history", f"deployment/{deploy}", "-n", ns, check=False)

@@ -81,11 +81,51 @@ ss -tlnp | grep 1883
 
 ## 3. paho-mqtt のインストール
 
+> 📦 `requirements/stage2.txt` は `paho-mqtt>=2.0` を要求します。
+> 2.0 でコールバック API が変わり、教材のコードは新 API 前提のためです（後述）。
+
 ```bash
-pip install paho-mqtt
+source .venv/bin/activate
+pip install -r requirements/stage2.txt
 
 python3 -c "import paho.mqtt.client; print('OK')"
 # OK
+```
+
+### paho-mqtt 2.0 でのコールバック API 変更（重要）
+
+2024 年リリースの paho-mqtt 2.0 で、**クライアントの作り方とコールバックの引数が変わりました**。
+ネット上の記事の多くは 1.x 時代のもので、そのまま書くと動きません。
+
+```python
+# ❌ 1.x の書き方（2.x では DeprecationWarning、将来削除）
+client = mqtt.Client()
+
+def on_connect(client, userdata, flags, rc):   # 引数 4 個
+    ...
+```
+
+```python
+# ✅ 2.x の書き方（この教材はこちら）
+client = mqtt.Client(mqtt.CallbackAPIVersion.VERSION2)
+
+def on_connect(client, userdata, flags, reason_code, properties):   # 引数 5 個
+    ...
+```
+
+変更点は 2 つです。
+
+| 項目 | 1.x | 2.x（VERSION2） |
+|------|-----|----------------|
+| コンストラクタ | `mqtt.Client()` | `mqtt.Client(mqtt.CallbackAPIVersion.VERSION2)` |
+| `on_connect` の引数 | `(client, userdata, flags, rc)` | `(client, userdata, flags, reason_code, properties)` |
+
+`rc` が `reason_code` に変わり、MQTT 5.0 の `properties` が末尾に追加されています。
+`CallbackAPIVersion` を指定し忘れると、2.x では次のエラーになります。
+
+```
+ValueError: Unsupported callback API version: version 2.0 added a callback_api_version,
+see docs/migrations.rst for details
 ```
 
 ---

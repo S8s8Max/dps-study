@@ -108,6 +108,20 @@ docker exec redpanda rpk topic create sensor-events --partitions 3
 
 ## 4. aiokafka でプロデューサー
 
+### クライアントのインストール
+
+Redpanda は Kafka 互換プロトコルなので、**Kafka クライアントをそのまま使えます**。
+この教材では asyncio 対応の `aiokafka` を使います。
+
+```bash
+source .venv/bin/activate
+pip install -r requirements/stage3.txt
+
+python3 -c "import aiokafka; print(aiokafka.__version__)"
+```
+
+> 📦 venv をまだ作っていない場合は [`docs/python-setup.md`](../python-setup.md) を先に。
+
 ```python
 from aiokafka import AIOKafkaProducer
 import asyncio, json

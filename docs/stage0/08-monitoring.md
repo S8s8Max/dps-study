@@ -137,9 +137,9 @@ sudo docker compose up -d
 # コンテナが起動しているか確認
 docker ps
 # CONTAINER ID   IMAGE                       STATUS
-# xxx            grafana/grafana:11.2.2      Up X seconds
-# yyy            prom/prometheus:v2.54.1     Up X seconds
-# zzz            prom/node-exporter:v1.8.2   Up X seconds
+# xxx            grafana/grafana:12.4.11      Up X seconds
+# yyy            prom/prometheus:v3.5.5     Up X seconds
+# zzz            prom/node-exporter:v1.12.1   Up X seconds
 
 # node-exporter のメトリクスを確認
 curl http://localhost:9100/metrics | head -20

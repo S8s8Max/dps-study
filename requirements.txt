@@ -1,0 +1,17 @@
+# 全ステージ分をまとめて入れる場合はこのファイルを使う。
+#
+#   pip install -r requirements.txt
+#
+# Pi 3B（1GB RAM・microSD）では Stage 4 の ray / pyarrow が重い。
+# 進めているステージの分だけ入れるほうが速い:
+#
+#   pip install -r requirements/stage1.txt
+#
+# Stage 0（環境構築）と Stage 6（理論シミュレーション）は
+# 標準ライブラリだけで動くため、追加パッケージは不要。
+
+-r requirements/stage1.txt
+-r requirements/stage2.txt
+-r requirements/stage3.txt
+-r requirements/stage4.txt
+-r requirements/stage5.txt

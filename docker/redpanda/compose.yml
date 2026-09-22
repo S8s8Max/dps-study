@@ -1,6 +1,6 @@
 services:
   redpanda:
-    image: redpandadata/redpanda:v24.3.6
+    image: redpandadata/redpanda:v25.3.17
     container_name: redpanda
     command:
       - redpanda
@@ -29,7 +29,7 @@ services:
 
   # Redpanda Console は Pi 4（2GB+）推奨。Pi 3B では省略可。
   # console:
-  #   image: docker.redpanda.com/redpandadata/console:v2.7.0
+  #   image: docker.redpanda.com/redpandadata/console:v3.12.0
   #   depends_on: [redpanda]
   #   ports:
   #     - "8080:8080"

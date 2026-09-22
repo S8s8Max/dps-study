@@ -1,0 +1,8 @@
+# Stage 4: 分散フレームワーク
+#
+# Pi 3B（1GB RAM）では ray[default] のダッシュボード一式は重い。
+# 容量・メモリを節約するなら ray（最小構成）だけでも教材は動く。
+ray>=2.30
+dask[dataframe]>=2024.8.0
+pandas>=2.0
+pyarrow>=16.0

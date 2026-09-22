@@ -45,8 +45,12 @@ Ray = 分散実行ランタイム
 ## 2. インストールと起動
 
 ```bash
-pip install ray
+source .venv/bin/activate
+pip install -r requirements/stage4.txt
 ```
+
+> 💾 `ray` + `pandas` + `pyarrow` で 1GB 近く使います。
+> microSD の空きを `df -h /` で先に確認してください。
 
 ### シングルノード（開発・学習用）
 

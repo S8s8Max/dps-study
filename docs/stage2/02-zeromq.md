@@ -40,8 +40,12 @@ PUSH ─────► PULL   (タスク配布)
 
 ## 2. インストールと事前確認
 
+> 📦 仮想環境が有効か確認してください（`(.venv)` がプロンプトに出ているか）。
+> まだの場合は [`docs/python-setup.md`](../python-setup.md) を先に実施します。
+
 ```bash
-pip install pyzmq
+source .venv/bin/activate
+pip install -r requirements/stage2.txt
 
 # 動作確認
 python3 -c "import zmq; print(zmq.zmq_version())"

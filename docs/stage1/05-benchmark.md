@@ -55,8 +55,11 @@ Pi 3B は 4 コアなので、N=4 が実質的な上限です。
 ## 2. 事前確認
 
 ```bash
-# numpy のインストール（行列計算に使用）
-pip install numpy
+# numpy（行列計算に使用）
+# Pi でのビルドを避けたい場合は apt 版 + venv --system-site-packages が速い
+#   → docs/python-setup.md を参照
+source .venv/bin/activate
+pip install -r requirements/stage1.txt
 
 # 現在の CPU 負荷確認（他のプロセスが邪魔しないか）
 htop

@@ -1,0 +1,6 @@
+# Stage 1: 並列計算の基本
+#
+# mpi4py は先に OpenMPI の開発パッケージが必要:
+#   sudo apt install -y libopenmpi-dev openmpi-bin
+mpi4py>=4.0
+numpy>=1.26

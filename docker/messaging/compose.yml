@@ -4,7 +4,7 @@
 
 services:
   mosquitto:
-    image: eclipse-mosquitto:2.0.18
+    image: eclipse-mosquitto:2.0.22
     container_name: mosquitto
     restart: unless-stopped
     ports:
@@ -18,7 +18,7 @@ services:
           memory: 64m
 
   nats:
-    image: nats:2.10.20-alpine
+    image: nats:2.15.0-alpine
     container_name: nats
     restart: unless-stopped
     ports:

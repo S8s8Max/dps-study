@@ -1,0 +1,3 @@
+# Stage 3: 状態を持つストリーム処理
+# Redpanda は Kafka 互換なので Kafka クライアントをそのまま使う
+aiokafka>=0.11

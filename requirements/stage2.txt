@@ -1,0 +1,9 @@
+# Stage 2: メッセージングとパイプライン
+pyzmq>=25.0
+
+# paho-mqtt 2.0 でコールバック API が変わった。
+# 教材のコードは mqtt.Client(mqtt.CallbackAPIVersion.VERSION2) を使うため
+# 1.x では動かない。
+paho-mqtt>=2.0
+
+nats-py>=2.6

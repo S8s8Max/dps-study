@@ -5,7 +5,7 @@
 /toggle  → POST で readiness を切り替える（Service 除外の確認用）
 
 使い方（直接起動）:
-  pip install aiohttp
+  source .venv/bin/activate && pip install -r requirements/stage5.txt
   python3 01_health_server.py
 
 使い方（Docker/k3s）:
@@ -99,7 +99,7 @@ async def main():
     asyncio.create_task(startup_delay())
 
     # SIGTERM で graceful shutdown
-    loop = asyncio.get_event_loop()
+    loop = asyncio.get_running_loop()
     stop_event = asyncio.Event()
     loop.add_signal_handler(signal.SIGTERM, stop_event.set)
 

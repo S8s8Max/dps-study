@@ -69,7 +69,7 @@ class RaftNode:
         self._reset_timeout()
 
     def _reset_timeout(self):
-        self.timeout_at = asyncio.get_event_loop().time() + self.election_timeout
+        self.timeout_at = asyncio.get_running_loop().time() + self.election_timeout
 
     def log(self, msg: str):
         role_label = {Role.FOLLOWER: "F", Role.CANDIDATE: "C", Role.LEADER: "L"}
@@ -147,7 +147,7 @@ class RaftNode:
         self._reset_timeout()
 
     async def run(self, duration: float):
-        loop = asyncio.get_event_loop()
+        loop = asyncio.get_running_loop()
         end_time = loop.time() + duration
 
         while loop.time() < end_time and self.alive:
@@ -181,7 +181,6 @@ class RaftNode:
 
 
 async def run_election_scenario(n_nodes: int, duration: float):
-    loop = asyncio.get_event_loop()
     nodes = [RaftNode(i, n_nodes) for i in range(n_nodes)]
     for node in nodes:
         node.peers = nodes
@@ -199,7 +198,7 @@ async def main():
 
     # シナリオ 1: 正常な選出（3ノード）
     print("【シナリオ 1】3ノードクラスタの正常な選出")
-    print(f"  各ノードの election timeout をランダムに設定")
+    print("  各ノードの election timeout をランダムに設定")
     print()
     nodes = await run_election_scenario(n_nodes=3, duration=0.8)
 
@@ -216,7 +215,6 @@ async def main():
 
     async def scenario_with_failure():
         N = 5
-        loop = asyncio.get_event_loop()
         nodes = [RaftNode(i, N) for i in range(N)]
         for node in nodes:
             node.peers = nodes

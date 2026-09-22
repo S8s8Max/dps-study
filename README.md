@@ -26,6 +26,23 @@ Raspberry Pi を使って分散処理を段階的に学ぶための、教材と�
 | 管理用PC | macOS |
 | ネットワーク管理 | NetworkManager（`nmcli`）|
 
+## Python 環境の準備（Stage 1 以降で必須）
+
+Raspberry Pi OS Bookworm（Debian 12）以降は **PEP 668** により、
+仮想環境なしの `pip install` が `externally-managed-environment` エラーで失敗します。
+
+```bash
+cd ~/dps-study
+python3 -m venv .venv
+source .venv/bin/activate
+
+# 進めているステージの分だけ入れる
+pip install -r requirements/stage1.txt
+```
+
+詳細・ラズパイ固有の注意点（numpy のビルド時間、mpi4py の前提パッケージ、
+Stage 4 の容量）は [`docs/python-setup.md`](docs/python-setup.md) を参照してください。
+
 ## ステージ0 の進め方
 
 ステージ0は以下の9ステップで構成されています。**01 から順番に**進めてください。

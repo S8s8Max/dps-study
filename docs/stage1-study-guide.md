@@ -76,7 +76,8 @@ with Pool(cpu_count()) as p:
 
 **主なツール・コマンド**
 ```bash
-pip install mpi4py
+sudo apt install -y libopenmpi-dev openmpi-bin
+source .venv/bin/activate && pip install -r requirements/stage1.txt
 mpirun -np 4 python3 hello_mpi.py
 ```
 
